@@ -1,4 +1,6 @@
-﻿using Tiba.RoutingSlips.Builders;
+﻿using Tiba.Core;
+using Tiba.RoutingSlips.Builders;
+using Tiba.RoutingSlips.Context.Events;
 using Tiba.RoutingSlips.Utilities;
 
 namespace Tiba.RoutingSlips.Context.ExecutionResults;
@@ -23,5 +25,13 @@ public class NextActivityWithVariablesExecutionResult<TArguments> : CompletedExe
     {
         base.ConfigBuilder(builder);
         builder.AddVariables(_variables);
+    }
+    protected override void PublishActivityExecutedEvent(ICommandHandlerContext? commandHandlerContext)
+    {
+        commandHandlerContext!.RequestContext.EventPublisher
+            .Publish(new ActivityExecuted(commandHandlerContext!.RequestContext.CorrelationId, Activity, null)
+            {
+                CommandId = commandHandlerContext!.RequestContext.CommandId
+            });
     }
 }

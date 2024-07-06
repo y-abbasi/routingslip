@@ -1,4 +1,6 @@
-﻿using Tiba.RoutingSlips.Builders;
+﻿using Tiba.Core;
+using Tiba.RoutingSlips.Builders;
+using Tiba.RoutingSlips.Context.Events;
 
 namespace Tiba.RoutingSlips.Context.ExecutionResults;
 
@@ -7,6 +9,14 @@ public class NextActivityExecutionResult<TArguments> : CompletedExecutionResult<
     public NextActivityExecutionResult(IExecutionContext context, RoutingSlipActivity activity,
         RoutingSlip routingSlip) : base(context, activity, routingSlip)
     {
+    }
+    protected override void PublishActivityExecutedEvent(ICommandHandlerContext? commandHandlerContext)
+    {
+        commandHandlerContext!.RequestContext.EventPublisher
+            .Publish(new ActivityExecuted(commandHandlerContext!.RequestContext.CorrelationId, Activity, null)
+            {
+                CommandId = commandHandlerContext!.RequestContext.CommandId
+            });
     }
 }
 
@@ -29,5 +39,13 @@ public class NextActivityWithLogExecutionResult<TArguments, TLog> : CompletedExe
         base.ConfigBuilder(builder);
         builder.AddVariables(_variables);
         builder.AddCompensateLog(Activity, _data);
+    }
+    protected override void PublishActivityExecutedEvent(ICommandHandlerContext? commandHandlerContext)
+    {
+        commandHandlerContext!.RequestContext.EventPublisher
+            .Publish(new ActivityExecuted(commandHandlerContext!.RequestContext.CorrelationId, Activity, _data)
+            {
+                CommandId = commandHandlerContext!.RequestContext.CommandId
+            });
     }
 }

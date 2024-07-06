@@ -13,7 +13,10 @@ public class DebitActivity : ICompensateActivity<DebitCommand, TransactionLog>
             $"Debit {context.Arguments.Amount}$ from {context.Arguments.AccountNo}, referenceId is '{referenceId}'");
         if (context.Arguments.Amount > 1000)
             return Task.FromResult(context.Faulted(new Exception("Amount should be less than 1000")));
-        return Task.FromResult(context.CompletedWithLog(new TransactionLog(referenceId)));
+        return Task.FromResult(context.CompletedWithLog(new TransactionLog(referenceId, 
+            "Debit",
+            context.Arguments.Amount,
+            context.Arguments.AccountNo)));
     }
 
     public Task<ICompensateResult> Compensate(ICompensateContext<TransactionLog> context)
@@ -34,7 +37,10 @@ public class CreditActivity : ICompensateActivity<CreditCommand, TransactionLog>
         Guid referenceId = Guid.NewGuid();
         Console.WriteLine(
             $"Credit {context.Arguments.Amount}$ from {context.Arguments.AccountNo}, referenceId is '{referenceId}'");
-        return Task.FromResult(context.CompletedWithLog(new TransactionLog(referenceId)));
+        return Task.FromResult(context.CompletedWithLog(new TransactionLog(referenceId, 
+            "Credit",
+            context.Arguments.Amount,
+            context.Arguments.AccountNo)));
     }
 
     public Task<ICompensateResult> Compensate(ICompensateContext<TransactionLog> context)
@@ -44,7 +50,7 @@ public class CreditActivity : ICompensateActivity<CreditCommand, TransactionLog>
     }
 }
 
-public record TransactionLog(Guid ReferenceId);
+public record TransactionLog(Guid ReferenceId, string Type, decimal Amount, string AccountNo);
 
 public record DebitCommand(string AccountNo, decimal Amount);
 

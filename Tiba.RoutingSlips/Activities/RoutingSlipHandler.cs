@@ -12,7 +12,6 @@ namespace Tiba.RoutingSlips.Activities;
 public class RoutingSlipHandler : ICommunicationService, IService, IHandleMessages<RoutingSlip>,
     IRequestContextContainer
 {
-    private readonly ICommandHandlerContext _commandHandlerContext;
     private readonly ICommandNotificationService _commandNotificationService;
     private readonly IServiceProvider _serviceProvider;
 
@@ -20,11 +19,19 @@ public class RoutingSlipHandler : ICommunicationService, IService, IHandleMessag
         ICommandNotificationService commandNotificationService,
         IServiceProvider serviceProvider)
     {
-        _commandHandlerContext = commandHandlerContext;
         _commandNotificationService = commandNotificationService;
         _serviceProvider = serviceProvider;
         commandHandlerContext.RequestContext.EventPublisher.RegisterHandler(
             new DelegateHandler<RoutingSlipFailed>(evt => 
+                _commandNotificationService.NotifyToGateway(evt)));
+        commandHandlerContext.RequestContext.EventPublisher.RegisterHandler(
+            new DelegateHandler<RoutingSlipCompleted>(evt => 
+                _commandNotificationService.NotifyToGateway(evt)));
+       commandHandlerContext.RequestContext.EventPublisher.RegisterHandler(
+            new DelegateHandler<ActivityExecuted>(evt => 
+                _commandNotificationService.NotifyToGateway(evt)));
+       commandHandlerContext.RequestContext.EventPublisher.RegisterHandler(
+            new DelegateHandler<ActivityFailed>(evt => 
                 _commandNotificationService.NotifyToGateway(evt)));
     }
 

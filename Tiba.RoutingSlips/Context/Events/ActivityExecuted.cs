@@ -11,18 +11,25 @@ public class RoutingSlipEvent : BoundedContextNotifyMessage
 
 public class ActivityExecuted : RoutingSlipEvent
 {
-    private readonly RoutingSlipActivity _activity;
+    public RoutingSlipActivity Activity { get; }
+    public object LogData { get; }
 
-    public ActivityExecuted(Guid correlationId, RoutingSlipActivity activity) : base(correlationId)
+    public ActivityExecuted(Guid correlationId, RoutingSlipActivity activity, object LogData) : base(correlationId)
     {
-        _activity = activity;
+        Activity = activity;
+        this.LogData = LogData;
     }
 }
 
 public class ActivityFailed : RoutingSlipEvent
 {
-    public ActivityFailed(Guid correlationId) : base(correlationId)
+    public RoutingSlipActivity Activity { get; }
+    public Exception Exception { get; }
+
+    public ActivityFailed(Guid correlationId, RoutingSlipActivity activity, Exception exception) : base(correlationId)
     {
+        Activity = activity;
+        Exception = exception;
     }
 }
 

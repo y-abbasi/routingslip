@@ -25,7 +25,7 @@ public class FaultedExecutionResult<TArguments> : IExecutionResult
         var commandHandlerContext = _context.ServiceProvider.GetCommandHandlerContext();
 
         commandHandlerContext.RequestContext.EventPublisher.Publish(
-            new ActivityFailed(commandHandlerContext.RequestContext.CorrelationId)
+            new ActivityFailed(commandHandlerContext.RequestContext.CorrelationId, _activity, _exception)
             {
                 CommandId = commandHandlerContext.RequestContext.CommandId,
             });
