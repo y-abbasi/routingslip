@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using Tiba.RoutingSlips.Utilities;
 
 namespace Tiba.RoutingSlips.Builders;
 
@@ -12,7 +11,7 @@ public record RoutingSlipBuilder
     public RoutingSlipBuilder(RoutingSlip routingSlip, ImmutableList<RoutingSlipActivity> routingSlipActivities)
     {
         RoutingSlipActivities = routingSlipActivities;
-        Variables = routingSlip.Variables.ToDictionary();
+        Variables = routingSlip.Variables;
     }
 
     public RoutingSlipBuilder(RoutingSlip routingSlip, ImmutableList<RoutingSlipActivity> routingSlipActivities,
@@ -27,7 +26,7 @@ public record RoutingSlipBuilder
     private ImmutableList<RoutingSlipActivity> RoutingSlipActivities { get; init; } =
         ImmutableList<RoutingSlipActivity>.Empty;
 
-    private Dictionary<string, object> Variables = new();
+    private ImmutableDictionary<string, object> Variables = ImmutableDictionary<string, object>.Empty;
     private Exception _exception;
 
     public RoutingSlipBuilder AddActivity<T>(string name, string endpointName, object arguments)
@@ -46,7 +45,8 @@ public record RoutingSlipBuilder
     {
         foreach (var property in variables.GetType().GetProperties())
         {
-            Variables[property.Name] = property.GetValue(variables)!;
+            Variables = Variables.Remove(property.Name)
+                .Add(property.Name, property.GetValue(variables)!);
         }
 
         return this;
@@ -56,7 +56,7 @@ public record RoutingSlipBuilder
     {
         foreach (var item in variables)
         {
-            Variables[item.Key] = item.Value;
+            Variables = Variables.Remove(item.Key).Add(item.Key, item.Value);
         }
 
         return this;

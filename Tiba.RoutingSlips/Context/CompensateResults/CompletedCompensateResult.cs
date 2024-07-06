@@ -1,4 +1,5 @@
 ﻿using Tiba.RoutingSlips.Builders;
+using Tiba.RoutingSlips.Context.Events;
 using Tiba.RoutingSlips.Context.ExecutionResults;
 
 namespace Tiba.RoutingSlips.Context.CompensateResults;
@@ -26,11 +27,19 @@ public class CompletedCompensateResult : ICompensateResult
         {
             var endpoint = await _context.GetSendEndpoint(routingSlip.GetCurrentExecuteAddress());
             await _context.Forward(endpoint, routingSlip);
+            return;
         }
+
+        var commandHandlerContext = _context.ServiceProvider.GetCommandHandlerContext();
+        commandHandlerContext.RequestContext.EventPublisher.Publish(new RoutingSlipFailed(commandHandlerContext.RequestContext.CorrelationId)
+        {
+            CommandId = commandHandlerContext.RequestContext.CommandId
+        });
     }
 
     protected virtual void ConfigBuilder(RoutingSlipBuilder builder)
     {
+        
     }
 
     public virtual bool IsFaulted(out Exception exception)
@@ -39,7 +48,7 @@ public class CompletedCompensateResult : ICompensateResult
         return false;
     }
 
-    private bool HasNextStep(RoutingSlip routingSlip) => routingSlip.RoutingSlipActivities.Count > 0;
+    private bool HasNextStep(RoutingSlip routingSlip) => routingSlip.CompensateLogs.Any();
 
     static RoutingSlipBuilder CreateRoutingSlipBuilder(RoutingSlip routingSlip)
     {

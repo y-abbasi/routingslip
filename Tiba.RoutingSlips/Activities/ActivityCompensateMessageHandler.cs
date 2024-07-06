@@ -12,9 +12,8 @@ public class ActivityCompensateMessageHandler<TActivity, TArgument, TLog>
         _serviceProvider = serviceProvider;
     }
 
-    public async Task Handle(MessageContext<RoutingSlip> context)
+    public async Task Handle(RoutingSlip routingSlip)
     {
-        var routingSlip = context.Message;
         var routingSlipContext = CreateContext(routingSlip);
         if (_serviceProvider.GetService(routingSlip.GetNextCompensate().Activity.ActivityType) is TActivity activity)
         {
@@ -25,6 +24,9 @@ public class ActivityCompensateMessageHandler<TActivity, TArgument, TLog>
 
     private ICompensateContext<TLog> CreateContext(RoutingSlip routingSlip)
     {
-        return new CompensateContext<TLog>(routingSlip, routingSlip.Variables);
+        return new CompensateContext<TLog>(routingSlip, routingSlip.Variables)
+        {
+            ServiceProvider = _serviceProvider,
+        };
     }
 }

@@ -1,4 +1,5 @@
-﻿using Tiba.RoutingSlips.Context.ExecutionResults;
+﻿using Tiba.Core;
+using Tiba.RoutingSlips.Context.ExecutionResults;
 
 namespace Tiba.RoutingSlips.Context;
 
@@ -12,8 +13,15 @@ public interface IExecutionContext
     IExecutionResult FaultedWithVariable(Exception exception, object variables);
     Task<ISendEndpoint> GetSendEndpoint(Uri getNextExecuteAddress);
 }
+
+public static class ServiceProviderContextExtensions
+{
+    public static ICommandHandlerContext GetCommandHandlerContext(this IServiceProvider provider) =>
+        (ICommandHandlerContext)provider.GetService(typeof(ICommandHandlerContext))!;
+}
 public interface ICompensateContext
 {
+    IServiceProvider ServiceProvider { get; }
     ICompensateResult Completed();
     ICompensateResult CompletedWithVariable(IEnumerable<KeyValuePair<string, object>> variables);
     ICompensateResult CompletedWithVariable(object variables);

@@ -19,7 +19,7 @@ public class RoutingSlipBuilderTests
         //Assert
         routingSlip.Should().BeEquivalentTo(new RoutingSlip(ImmutableList<RoutingSlipActivity>.Empty.Add(
                 new RoutingSlipActivity(typeof(WithdrawActivity), "sample", new WithdrawArgument("ACC-2500", 100), "Bc1")),
-            new Dictionary<string, object>(),
+            ImmutableDictionary<string, object>.Empty, 
             ImmutableStack<CompensateLog>.Empty,
             null));
     }
@@ -37,11 +37,10 @@ public class RoutingSlipBuilderTests
 
         //Assert
         routingSlip.Should().BeEquivalentTo(new RoutingSlip(ImmutableList<RoutingSlipActivity>.Empty.Add(
-                new RoutingSlipActivity(typeof(WithdrawActivity), "sample", new WithdrawArgument("ACC-2500", 100), "Bc1")),
-            new Dictionary<string, object>
-            {
-                ["Url"] = "http://arka.net"
-            }, ImmutableStack<CompensateLog>.Empty,
+                new RoutingSlipActivity(typeof(IWithdrawActivity), "sample", new WithdrawArgument("ACC-2500", 100), "Bc1")),
+                ImmutableDictionary<string, object>.Empty
+                    .Add("Url", "http://arka.net"),
+                ImmutableStack<CompensateLog>.Empty,
             null));
     }
 }

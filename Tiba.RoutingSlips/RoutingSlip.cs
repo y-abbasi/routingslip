@@ -1,13 +1,14 @@
 using System.Collections.Immutable;
+using Tiba.Core;
 using Tiba.RoutingSlips.Builders;
 
 namespace Tiba.RoutingSlips;
 
 public record RoutingSlip(
     ImmutableList<RoutingSlipActivity> RoutingSlipActivities,
-    Dictionary<string, object> Variables,
+    ImmutableDictionary<string, object> Variables,
     ImmutableStack<CompensateLog> CompensateLogs,
-    Exception? Exception)
+    Exception? Exception) : IMessage
 {
     public RoutingSlip GetNext()
     {
@@ -34,4 +35,19 @@ public record RoutingSlip(
     {
         return CompensateLogs.Peek();
     }
+
+    public string NextBcName()
+    {
+        if (IsInFaultState)
+        {
+            var a = CompensateLogs.Peek();
+            return a.Activity.ActivityType.Assembly.GetName().Name!.Split('.').Skip(1).Take(1).First();
+        }
+
+        var currentItem = RoutingSlipActivities[0];
+        return currentItem.ActivityType.Assembly.GetName().Name!.Split('.').Skip(1).Take(1).First();
+    }
+
+    public Guid CorrelationId { get; set; }
+    public Guid CommandId { get; set; }
 }

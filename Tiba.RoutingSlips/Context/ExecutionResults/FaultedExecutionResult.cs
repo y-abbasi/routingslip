@@ -1,4 +1,6 @@
-﻿using Tiba.RoutingSlips.Builders;
+﻿using Tiba.Messaging.Contracts.Messages;
+using Tiba.RoutingSlips.Builders;
+using Tiba.RoutingSlips.Context.Events;
 
 namespace Tiba.RoutingSlips.Context.ExecutionResults;
 
@@ -20,6 +22,14 @@ public class FaultedExecutionResult<TArguments> : IExecutionResult
 
     public async Task Evaluate()
     {
+        var commandHandlerContext = _context.ServiceProvider.GetCommandHandlerContext();
+
+        commandHandlerContext.RequestContext.EventPublisher.Publish(
+            new ActivityFailed(commandHandlerContext.RequestContext.CorrelationId)
+            {
+                CommandId = commandHandlerContext.RequestContext.CommandId,
+            });
+
         var builder = CreateRoutingSlipBuilder(_routingSlip);
 
         Build(builder);
@@ -28,7 +38,13 @@ public class FaultedExecutionResult<TArguments> : IExecutionResult
         {
             var endpoint = await _context.GetSendEndpoint(routingSlip.GetCurrentCompensateExecuteAddress());
             await _context.Forward(endpoint, routingSlip);
+            return;
         }
+        commandHandlerContext.RequestContext.EventPublisher.Publish(
+            new RoutingSlipFailed(commandHandlerContext.RequestContext.CorrelationId)
+            {
+                CommandId = commandHandlerContext.RequestContext.CommandId,
+            });
     }
 
     private bool HasCompensateStep(RoutingSlip routingSlip)

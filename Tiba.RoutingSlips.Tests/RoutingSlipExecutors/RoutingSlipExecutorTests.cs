@@ -44,5 +44,6 @@ public class RoutingSlipExecutorTests
         await SutBuilder.Execute(routingSlip);
         
         //Assert
+        SutBuilder.AssertRoutingSlipFailedMessageNotified();
     }
 }

@@ -10,18 +10,20 @@ public class NextActivityExecutionResult<TArguments> : CompletedExecutionResult<
     }
 }
 
-public class NextActivityWithLogExecutionResult<TArguments,TLog> : CompletedExecutionResult<TArguments> where TLog : class
+public class NextActivityWithLogExecutionResult<TArguments, TLog> : CompletedExecutionResult<TArguments>
+    where TLog : class
 {
     private readonly TLog _data;
     private readonly IDictionary<string, object> _variables;
 
     public NextActivityWithLogExecutionResult(IExecutionContext context, RoutingSlipActivity activity,
-        RoutingSlip routingSlip, TLog data, IEnumerable<KeyValuePair<string, object>> variables) : base(context, activity, routingSlip)
+        RoutingSlip routingSlip, TLog data, IEnumerable<KeyValuePair<string, object>> variables) : base(context,
+        activity, routingSlip)
     {
         _data = data;
-        _variables = variables.ToDictionary();
+        _variables = variables.ToDictionary(v => v.Key, v => v.Value);
     }
-    
+
     protected override void ConfigBuilder(RoutingSlipBuilder builder)
     {
         base.ConfigBuilder(builder);

@@ -1,13 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="FluentAssertions" Version="6.12.0" />
+      <PackageReference Include="Tiba.Application" Version="0.0.161.9766" />
+      <PackageReference Include="Tiba.Domain.Model" Version="0.0.161.9766" />
+      <PackageReference Include="Tiba.Messaging.Contracts" Version="0.0.161.9766" />
+      <PackageReference Include="Tiba.Messaging.NServiceBus" Version="0.0.161.9766" />
     </ItemGroup>
 
 </Project>

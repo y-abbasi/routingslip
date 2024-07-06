@@ -12,9 +12,8 @@ public class ActivityMessageHandler<TActivity, TArgument>
         _serviceProvider = serviceProvider;
     }
 
-    public async Task Handle(MessageContext<RoutingSlip> context)
+    public async Task Handle(RoutingSlip routingSlip)
     {
-        var routingSlip = context.Message;
         var routingSlipContext = CreateContext(routingSlip);
 
         if (_serviceProvider.GetService(routingSlip.GetCurrentActivity().ActivityType) is TActivity activity)

@@ -1,4 +1,6 @@
-﻿using Tiba.RoutingSlips.Builders;
+﻿using Tiba.Core;
+using Tiba.RoutingSlips.Builders;
+using Tiba.RoutingSlips.Context.Events;
 
 namespace Tiba.RoutingSlips.Context.ExecutionResults;
 
@@ -24,7 +26,15 @@ public abstract class CompletedExecutionResult<TArguments> : IExecutionResult
         {
             var endpoint = await _context.GetSendEndpoint(routingSlip.GetCurrentExecuteAddress());
             await _context.Forward(endpoint, routingSlip);
+            return;
         }
+
+        var commandHandlerContext = (ICommandHandlerContext?)_context.ServiceProvider.GetService(typeof(ICommandHandlerContext));
+        commandHandlerContext!.RequestContext.EventPublisher
+            .Publish(new RoutingSlipCompleted(commandHandlerContext!.RequestContext.CorrelationId)
+            {
+                CommandId = commandHandlerContext!.RequestContext.CommandId
+            });
     }
 
     protected virtual void ConfigBuilder(RoutingSlipBuilder builder)

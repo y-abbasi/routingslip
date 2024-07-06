@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+using Tiba.Messaging.Contracts;
 using Tiba.RoutingSlips.Context.ExecutionResults;
 
 namespace Tiba.RoutingSlips.Context;
@@ -10,7 +12,7 @@ public interface IExecutionContext<out TArguments> : IExecutionContext
 
 public class ExecutionContext<TArguments> : IExecutionContext<TArguments>
 {
-    public ExecutionContext(RoutingSlip routingSlip, Dictionary<string, object> variables)
+    public ExecutionContext(RoutingSlip routingSlip, ImmutableDictionary<string, object> variables)
     {
         RoutingSlip = routingSlip;
         Variables = variables;
@@ -18,7 +20,7 @@ public class ExecutionContext<TArguments> : IExecutionContext<TArguments>
 
     private RoutingSlip RoutingSlip { get; }
 
-    public Dictionary<string, object> Variables { get; }
+    public ImmutableDictionary<string, object> Variables { get; }
 
     public IServiceProvider ServiceProvider { get; init; }
 
@@ -57,7 +59,8 @@ public class ExecutionContext<TArguments> : IExecutionContext<TArguments>
 
     public Task<ISendEndpoint> GetSendEndpoint(Uri getNextExecuteAddress)
     {
-        return Task.FromResult<ISendEndpoint>(new InMemorySendEndpoint(ServiceProvider));
+        return Task.FromResult(
+            (ISendEndpoint)ServiceProvider.GetService(typeof(ISendEndpoint))!);
     }
     
     public TArguments Arguments => (TArguments)RoutingSlip.GetCurrentActivity().Arguments;
