@@ -11,15 +11,16 @@ public class RoutingSlipBuilderTests
     {
         //Arrange
         var builder = RoutingSlipBuilder.Default
-            .AddActivity<WithdrawActivity>("sample", "Bc1", new WithdrawArgument("ACC-2500", 100));
+            .AddActivity<WithdrawActivity>("sample", new WithdrawArgument("ACC-2500", 100));
 
         //Act
         var routingSlip = builder.Build();
 
         //Assert
         routingSlip.Should().BeEquivalentTo(new RoutingSlip(ImmutableList<RoutingSlipActivity>.Empty.Add(
-                new RoutingSlipActivity(typeof(WithdrawActivity), "sample", new WithdrawArgument("ACC-2500", 100), "Bc1")),
-            ImmutableDictionary<string, object>.Empty, 
+                new RoutingSlipActivity(typeof(WithdrawActivity), "sample",
+                    new WithdrawArgument("ACC-2500", 100)){ EndpointName = "RoutingSlips"}),
+            ImmutableDictionary<string, object>.Empty,
             ImmutableStack<CompensateLog>.Empty,
             null));
     }
@@ -37,10 +38,11 @@ public class RoutingSlipBuilderTests
 
         //Assert
         routingSlip.Should().BeEquivalentTo(new RoutingSlip(ImmutableList<RoutingSlipActivity>.Empty.Add(
-                new RoutingSlipActivity(typeof(IWithdrawActivity), "sample", new WithdrawArgument("ACC-2500", 100), "Bc1")),
-                ImmutableDictionary<string, object>.Empty
-                    .Add("Url", "http://arka.net"),
-                ImmutableStack<CompensateLog>.Empty,
+                new RoutingSlipActivity(typeof(IWithdrawActivity), "sample", new WithdrawArgument("ACC-2500", 100))
+                    { EndpointName = "Bc1" }),
+            ImmutableDictionary<string, object>.Empty
+                .Add("Url", "http://arka.net"),
+            ImmutableStack<CompensateLog>.Empty,
             null));
     }
 }

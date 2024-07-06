@@ -1,4 +1,5 @@
 ﻿using Tiba.RoutingSlips.Context;
+using Tiba.RoutingSlips.Context.ExecutionResults;
 
 namespace Tiba.RoutingSlips.Activities;
 
@@ -18,14 +19,18 @@ public class ActivityMessageHandler<TActivity, TArgument>
 
         if (_serviceProvider.GetService(routingSlip.GetCurrentActivity().ActivityType) is TActivity activity)
         {
+            IExecutionResult executionResult = routingSlipContext.Faulted(null!);
             try
             {
-                var executionResult = await activity.Execute(routingSlipContext);
-                await executionResult.Evaluate();
+                executionResult = await activity.Execute(routingSlipContext) ?? executionResult;
+                await executionResult.Evaluate().ConfigureAwait(false);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                if (!executionResult!.IsFaulted(out var faultException) || faultException != e)
+                    executionResult = routingSlipContext.Faulted(e);
+                
+                await executionResult.Evaluate().ConfigureAwait(false);
             }
         }
     }

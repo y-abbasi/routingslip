@@ -41,11 +41,11 @@ public record RoutingSlip(
         if (IsInFaultState)
         {
             var a = CompensateLogs.Peek();
-            return a.Activity.ActivityType.Assembly.GetName().Name!.Split('.').Skip(1).Take(1).First();
+            return a.Activity.EndpointName;
         }
 
         var currentItem = RoutingSlipActivities[0];
-        return currentItem.ActivityType.Assembly.GetName().Name!.Split('.').Skip(1).Take(1).First();
+        return currentItem.EndpointName;
     }
 
     public Guid CorrelationId { get; set; }

@@ -12,7 +12,7 @@ public class DebitActivity : ICompensateActivity<DebitCommand, TransactionLog>
         Console.WriteLine(
             $"Debit {context.Arguments.Amount}$ from {context.Arguments.AccountNo}, referenceId is '{referenceId}'");
         if (context.Arguments.Amount > 1000)
-            return Task.FromResult(context.Faulted(new Exception("Amount should be less than 1000")));
+            throw new Exception("Amount should be less than 1000");// return Task.FromResult(context.Faulted(new Exception("Amount should be less than 1000")));
         return Task.FromResult(context.CompletedWithLog(new TransactionLog(referenceId, 
             "Debit",
             context.Arguments.Amount,

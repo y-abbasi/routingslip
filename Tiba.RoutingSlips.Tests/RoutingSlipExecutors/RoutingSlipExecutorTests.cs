@@ -64,5 +64,6 @@ public class RoutingSlipExecutorTests
         SutBuilder.AssertRoutingSlipFailedMessageNotified();
         SutBuilder.AssertActivityExecutedEventPublished<DebitActivity>(1);
         SutBuilder.AssertActivityFailedEventPublished<DebitActivity, Exception>();
+        SutBuilder.AssertActivityExecutedEventPublished<CreditActivity>(0);
     }
 }

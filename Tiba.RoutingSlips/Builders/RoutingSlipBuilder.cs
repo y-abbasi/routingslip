@@ -29,12 +29,19 @@ public record RoutingSlipBuilder
     private ImmutableDictionary<string, object> Variables = ImmutableDictionary<string, object>.Empty;
     private Exception _exception;
 
+    public RoutingSlipBuilder AddActivity<T>(string name,  object arguments)
+    {
+        return this with
+        {
+            RoutingSlipActivities = RoutingSlipActivities.Add(new RoutingSlipActivity(typeof(T), name, arguments))
+        };
+    }
     public RoutingSlipBuilder AddActivity<T>(string name, string endpointName, object arguments)
     {
         return this with
         {
-            RoutingSlipActivities =
-            RoutingSlipActivities.Add(new RoutingSlipActivity(typeof(T), name, arguments, endpointName))
+            RoutingSlipActivities = RoutingSlipActivities
+                .Add(new RoutingSlipActivity(typeof(T), name, arguments){EndpointName = endpointName})
         };
     }
 
