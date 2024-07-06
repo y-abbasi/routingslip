@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using Tiba.Messaging.Contracts;
 using Tiba.RoutingSlips.Context.ExecutionResults;
 
 namespace Tiba.RoutingSlips.Context;

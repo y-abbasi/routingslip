@@ -1,5 +1,4 @@
 ﻿using Tiba.Messaging.Contracts;
-using Tiba.Messaging.Contracts.Messages;
 using Tiba.RoutingSlips.Builders;
 
 namespace Tiba.RoutingSlips.Context.Events;
