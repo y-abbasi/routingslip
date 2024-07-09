@@ -4,7 +4,7 @@ using Tiba.RoutingSlips.Builders;
 using Tiba.RoutingSlips.Context;
 using Tiba.RoutingSlips.Context.ExecutionResults;
 
-namespace Tiba.RoutingSlips.Tests.RoutingSlipBuilders;
+namespace Tiba.RoutingSlip.Application.Tests.RoutingSlipExecutors;
 
 public static class RoutinSlipBuilderExtension
 {

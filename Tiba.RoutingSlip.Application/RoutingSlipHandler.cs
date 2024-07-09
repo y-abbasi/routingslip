@@ -3,17 +3,17 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NServiceBus;
-using Tiba.Application;
 using Tiba.Core;
 using Tiba.Core.Exceptions;
 using Tiba.Core.Extensions;
 using Tiba.Core.Logging;
 using Tiba.Messaging.Contracts;
+using Tiba.RoutingSlips.Activities;
 using Tiba.RoutingSlips.Context.Events;
 
-namespace Tiba.RoutingSlips.Activities;
+namespace Tiba.RoutingSlip.Application;
 
-public class RoutingSlipHandler : ICommunicationService, IService, IHandleMessages<RoutingSlip>,
+public class RoutingSlipHandler : ICommunicationService, IService, IHandleMessages<RoutingSlips.RoutingSlip>,
     IRequestContextContainer
 {
     private readonly ICommandHandlerContext commandHandlerContext;
@@ -36,7 +36,7 @@ public class RoutingSlipHandler : ICommunicationService, IService, IHandleMessag
     }
 
 
-    public async Task Handle(RoutingSlip routingSlip, IMessageHandlerContext context)
+    public async Task Handle(RoutingSlips.RoutingSlip routingSlip, IMessageHandlerContext context)
     {
         var result = new List<Core.IMessage>();
         commandHandlerContext.RequestContext.EventPublisher.RegisterHandler(
@@ -52,7 +52,7 @@ public class RoutingSlipHandler : ICommunicationService, IService, IHandleMessag
         await DoWork(routingSlip);
     }
 
-    private async Task RegisterEventHandlers(RoutingSlip routingSlip)
+    private async Task RegisterEventHandlers(RoutingSlips.RoutingSlip routingSlip)
     {
         var commandNotificationService = await commandNotificationServiceFactory.Create(RequestContext);
         var message = new BoundedContextMessage()
@@ -113,7 +113,7 @@ public class RoutingSlipHandler : ICommunicationService, IService, IHandleMessag
         return exceptionData;
     }
 
-    private async Task DoWork(RoutingSlip routingSlip)
+    private async Task DoWork(RoutingSlips.RoutingSlip routingSlip)
     {
         var activity = routingSlip.GetCurrentActivity();
         dynamic activityInstance = Activator.CreateInstance(
@@ -128,7 +128,7 @@ public class RoutingSlipHandler : ICommunicationService, IService, IHandleMessag
         await activityInstance.Handle(routingSlip, RequestContext);
     }
 
-    private async Task HandleCompensation(RoutingSlip routingSlip)
+    private async Task HandleCompensation(RoutingSlips.RoutingSlip routingSlip)
     {
         var log = routingSlip.GetNextCompensate();
         Debug.Assert(log.Activity.CompensateActivityType is not null);

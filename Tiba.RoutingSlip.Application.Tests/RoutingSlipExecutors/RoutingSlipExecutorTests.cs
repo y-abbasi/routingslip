@@ -1,8 +1,6 @@
-﻿using FluentAssertions;
-using Tiba.RoutingSlips.Tests.RoutingSlipBuilders;
-using Xunit.Abstractions;
+﻿using Xunit.Abstractions;
 
-namespace Tiba.RoutingSlips.Tests.RoutingSlipExecutors;
+namespace Tiba.RoutingSlip.Application.Tests.RoutingSlipExecutors;
 
 public class RoutingSlipExecutorTests
 {

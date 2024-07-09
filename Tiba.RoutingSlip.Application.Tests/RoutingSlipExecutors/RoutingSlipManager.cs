@@ -5,19 +5,16 @@ using NSubstitute;
 using Tiba.Application;
 using Tiba.Application.Contracts;
 using Tiba.Application.Contracts.SchemaValidators;
-using Tiba.Application.WorkTranslators;
 using Tiba.Core;
 using Tiba.Core.Exceptions;
-using Tiba.Domain.Model;
 using Tiba.Messaging.Contracts;
 using Tiba.RoutingSlips.Activities;
 using Tiba.RoutingSlips.Builders;
 using Tiba.RoutingSlips.Context;
 using Tiba.RoutingSlips.Context.Events;
-using Tiba.RoutingSlips.Tests.RoutingSlipBuilders;
 using IMessage = Tiba.Core.IMessage;
 
-namespace Tiba.RoutingSlips.Tests.RoutingSlipExecutors;
+namespace Tiba.RoutingSlip.Application.Tests.RoutingSlipExecutors;
 
 public class RoutingSlipManager
 {
@@ -77,7 +74,7 @@ public class RoutingSlipManager
             .AddActivity<ICreditActivity>("credit1", new CreditData("ACC2", 1150))
             .AddVariables(new { compMode = 1 });
 
-    public async Task Execute(RoutingSlip scenarioOne)
+    public async Task Execute(RoutingSlips.RoutingSlip scenarioOne)
     {
         var serviceProvider = Substitute.For<IServiceProvider>();
         serviceProvider.GetService(typeof(ICommandHandlerContext)).Returns(_commandHandlerContext);
@@ -92,10 +89,10 @@ public class RoutingSlipManager
             serviceProvider,
             _exceptionConvertorService){RequestContext = requestContext };
         _sendEndPoint.WhenForAnyArgs(endpoint =>
-                endpoint.Send(Arg.Any<RoutingSlip>()))
+                endpoint.Send(Arg.Any<RoutingSlips.RoutingSlip>()))
             .Do(info =>
             {
-                handler.Handle((RoutingSlip)info.Args()[0], Substitute.For<IMessageHandlerContext>())
+                handler.Handle((RoutingSlips.RoutingSlip)info.Args()[0], Substitute.For<IMessageHandlerContext>())
                     .GetAwaiter().GetResult();
             });
 

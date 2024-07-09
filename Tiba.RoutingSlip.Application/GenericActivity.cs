@@ -1,9 +1,10 @@
 ﻿using Tiba.Application.Contracts;
 using Tiba.Core;
+using Tiba.RoutingSlips.Activities;
 using Tiba.RoutingSlips.Context;
 using Tiba.RoutingSlips.Context.ExecutionResults;
 
-namespace Tiba.RoutingSlips.Activities;
+namespace Tiba.RoutingSlip.Application;
 
 public sealed class GenericActivity<TArguments> : IActivity<TArguments>
     where TArguments : IMessage
