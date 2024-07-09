@@ -7,3 +7,7 @@ public interface ICompensateActivity<TArguments, TLog> : IActivity<TArguments>
 {
     Task<ICompensateResult> Compensate(ICompensateContext<TLog> context);
 }
+public interface ICompensateActivity<TLog>
+{
+    Task<ICompensateResult> Compensate(ICompensateContext<TLog> context);
+}

@@ -31,7 +31,8 @@ public class CompletedCompensateResult : ICompensateResult
         }
 
         var commandHandlerContext = _context.ServiceProvider.GetCommandHandlerContext();
-        commandHandlerContext.RequestContext.EventPublisher.Publish(new RoutingSlipFailed(commandHandlerContext.RequestContext.CorrelationId)
+        commandHandlerContext.RequestContext.EventPublisher.Publish(new RoutingSlipFailed(commandHandlerContext.RequestContext.CorrelationId,
+            routingSlip.Exception!)
         {
             CommandId = commandHandlerContext.RequestContext.CommandId
         });

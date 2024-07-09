@@ -1,4 +1,5 @@
-﻿using Tiba.RoutingSlips.Context;
+﻿using Tiba.Core;
+using Tiba.RoutingSlips.Context;
 using Tiba.RoutingSlips.Context.ExecutionResults;
 
 namespace Tiba.RoutingSlips.Activities;
@@ -13,9 +14,9 @@ public class ActivityMessageHandler<TActivity, TArgument>
         _serviceProvider = serviceProvider;
     }
 
-    public async Task Handle(RoutingSlip routingSlip)
+    public async Task Handle(RoutingSlip routingSlip, IRequestContext requestContext)
     {
-        var routingSlipContext = CreateContext(routingSlip);
+        var routingSlipContext = CreateContext(routingSlip, requestContext);
 
         if (_serviceProvider.GetService(routingSlip.GetCurrentActivity().ActivityType) is TActivity activity)
         {
@@ -35,9 +36,12 @@ public class ActivityMessageHandler<TActivity, TArgument>
         }
     }
 
-    private IExecutionContext<TArgument> CreateContext(RoutingSlip routingSlip)
+    private IExecutionContext<TArgument> CreateContext(RoutingSlip routingSlip, IRequestContext requestContext)
     {
         return new ExecutionContext<TArgument>(routingSlip, routingSlip.Variables)
-            { ServiceProvider = _serviceProvider };
+        {
+            ServiceProvider = _serviceProvider,
+            RequestContext = requestContext
+        };
     }
 }

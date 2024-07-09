@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Tiba.Core;
 using Tiba.RoutingSlips.Context.CompensateResults;
 using Tiba.RoutingSlips.Context.ExecutionResults;
 
@@ -8,6 +9,7 @@ public class CompensateContext<TLog> : ICompensateContext<TLog>
 {
     public RoutingSlip RoutingSlip { get; }
     public IServiceProvider ServiceProvider { get; init; }
+    public IRequestContext RequestContext { get; init; }
     public ImmutableDictionary<string, object> Variables { get; }
 
     public CompensateContext(RoutingSlip routingSlip, ImmutableDictionary<string,object> variables)

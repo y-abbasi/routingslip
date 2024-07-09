@@ -36,16 +36,16 @@ public class RoutingSlipExecutorTests
 
         //Assert
         SutBuilder.AssertRoutingSlipCompletedMessageNotified();
-        SutBuilder.AssertActivityExecutedEventPublished<DebitActivity>(2);
-        SutBuilder.AssertActivityExecutedEventPublishedWithLog<DebitActivity, TransactionLog>(1,
+        SutBuilder.AssertActivityExecutedEventPublished<IDebitActivity>(2);
+        SutBuilder.AssertActivityExecutedEventPublishedWithLog<IDebitActivity, TransactionLog>(1,
             log => log.Type == "Debit" &&
                    log.Amount == 100 &&
                    log.AccountNo == "ACC1");
-        SutBuilder.AssertActivityExecutedEventPublishedWithLog<DebitActivity, TransactionLog>(1,
+        SutBuilder.AssertActivityExecutedEventPublishedWithLog<IDebitActivity, TransactionLog>(1,
             log => log.Type == "Debit" &&
                    log.Amount == 950 &&
                    log.AccountNo == "ACC1");
-        SutBuilder.AssertActivityExecutedEventPublishedWithLog<CreditActivity, TransactionLog>(1,
+        SutBuilder.AssertActivityExecutedEventPublishedWithLog<ICreditActivity, TransactionLog>(1,
             log => log.Type == "Credit" &&
                    log.Amount == 1050 &&
                    log.AccountNo == "ACC2");
@@ -59,11 +59,11 @@ public class RoutingSlipExecutorTests
 
         //Act
         await SutBuilder.Execute(routingSlip);
-
+        
         //Assert
         SutBuilder.AssertRoutingSlipFailedMessageNotified();
-        SutBuilder.AssertActivityExecutedEventPublished<DebitActivity>(1);
-        SutBuilder.AssertActivityFailedEventPublished<DebitActivity, Exception>();
-        SutBuilder.AssertActivityExecutedEventPublished<CreditActivity>(0);
+        SutBuilder.AssertActivityExecutedEventPublished<IDebitActivity>(1);
+        SutBuilder.AssertEventPublished<CreditData>(1, e => e is { Amount: 100, AccountNo: "ACC1" });
+        SutBuilder.AssertActivityFailedEventPublished<IDebitActivity, Exception>();
     }
 }

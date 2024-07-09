@@ -40,7 +40,7 @@ public class FaultedExecutionResult<TArguments> : IExecutionResult
             return;
         }
         commandHandlerContext.RequestContext.EventPublisher.Publish(
-            new RoutingSlipFailed(commandHandlerContext.RequestContext.CorrelationId)
+            new RoutingSlipFailed(commandHandlerContext.RequestContext.CorrelationId, routingSlip.Exception!)
             {
                 CommandId = commandHandlerContext.RequestContext.CommandId,
             });

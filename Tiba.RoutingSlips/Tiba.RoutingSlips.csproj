@@ -7,11 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentAssertions" Version="6.12.0" />
-      <PackageReference Include="Tiba.Application" Version="0.0.161.9766" />
       <PackageReference Include="Tiba.Domain.Model" Version="0.0.161.9766" />
       <PackageReference Include="Tiba.Messaging.Contracts" Version="0.0.161.9766" />
-      <PackageReference Include="Tiba.Messaging.NServiceBus" Version="0.0.161.9766" />
     </ItemGroup>
 
 </Project>

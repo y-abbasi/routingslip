@@ -1,11 +1,15 @@
-﻿using Tiba.Messaging.Contracts;
+﻿using Tiba.Core;
+using Tiba.Messaging.Contracts;
 using Tiba.RoutingSlips.Builders;
 
 namespace Tiba.RoutingSlips.Context.Events;
 
-public class RoutingSlipEvent : BoundedContextNotifyMessage
+public class RoutingSlipEvent : IEvent
 {
     public RoutingSlipEvent(Guid correlationId) => this.CorrelationId = correlationId;
+    public Guid CorrelationId { get; set; }
+    public Guid CommandId { get; set; }
+    public Guid EventId { get; set; }
 }
 
 public class ActivityExecuted : RoutingSlipEvent
@@ -40,7 +44,9 @@ public class RoutingSlipCompleted : RoutingSlipEvent
 }
 public class RoutingSlipFailed : RoutingSlipEvent
 {
-    public RoutingSlipFailed(Guid correlationId) : base(correlationId)
+    public Exception Exception { get; }
+    public RoutingSlipFailed(Guid correlationId, Exception exception) : base(correlationId)
     {
+        Exception = exception;
     }
 }

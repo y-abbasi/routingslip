@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using Tiba.Core;
 using Tiba.RoutingSlips.Context.ExecutionResults;
 
 namespace Tiba.RoutingSlips.Context;
@@ -21,6 +22,8 @@ public class ExecutionContext<TArguments> : IExecutionContext<TArguments>
 
     public ImmutableDictionary<string, object> Variables { get; }
 
+    public string ActivityName => RoutingSlip.GetCurrentActivity().ActivityName;
+    public IRequestContext RequestContext { get; init; }
     public IServiceProvider ServiceProvider { get; init; }
 
     public IExecutionResult Completed()

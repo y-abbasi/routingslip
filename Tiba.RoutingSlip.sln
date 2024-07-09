@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiba.RoutingSlips", "Tiba.R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiba.RoutingSlips.Tests", "Tiba.RoutingSlips.Tests\Tiba.RoutingSlips.Tests.csproj", "{39050979-BD55-440C-991E-7421A13FE893}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiba.RoutingSlip.Application", "Tiba.RoutingSlip.Application\Tiba.RoutingSlip.Application.csproj", "{A0A3E554-9C08-468D-BF10-8D49621CD057}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiba.RoutingSlip.Application.Tests", "Tiba.RoutingSlip.Application.Tests\Tiba.RoutingSlip.Application.Tests.csproj", "{C4EDE517-055A-4528-BA43-DF79D5137E91}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{39050979-BD55-440C-991E-7421A13FE893}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39050979-BD55-440C-991E-7421A13FE893}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39050979-BD55-440C-991E-7421A13FE893}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0A3E554-9C08-468D-BF10-8D49621CD057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0A3E554-9C08-468D-BF10-8D49621CD057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0A3E554-9C08-468D-BF10-8D49621CD057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0A3E554-9C08-468D-BF10-8D49621CD057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4EDE517-055A-4528-BA43-DF79D5137E91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4EDE517-055A-4528-BA43-DF79D5137E91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4EDE517-055A-4528-BA43-DF79D5137E91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4EDE517-055A-4528-BA43-DF79D5137E91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

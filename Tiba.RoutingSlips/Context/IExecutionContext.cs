@@ -5,6 +5,8 @@ namespace Tiba.RoutingSlips.Context;
 
 public interface IExecutionContext
 {
+    string ActivityName { get; }
+    IRequestContext RequestContext { get; }
     IServiceProvider ServiceProvider { get; }
     IExecutionResult Completed();
     IExecutionResult CompletedWithVariable(IEnumerable<KeyValuePair<string, object>> variables);
@@ -21,6 +23,7 @@ public static class ServiceProviderContextExtensions
 }
 public interface ICompensateContext
 {
+    IRequestContext RequestContext { get; }
     IServiceProvider ServiceProvider { get; }
     ICompensateResult Completed();
     ICompensateResult CompletedWithVariable(IEnumerable<KeyValuePair<string, object>> variables);
